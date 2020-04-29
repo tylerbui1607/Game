@@ -17,7 +17,7 @@ public:
 	virtual void SetState(int state);
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	{
-		DebugOut(L"GetBbox torch\n");
+		//DebugOut(L"GetBbox torch\n");
 		left = x;
 		right = 32 + x;
 		top = y;

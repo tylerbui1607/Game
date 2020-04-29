@@ -32,6 +32,9 @@ public:
 	bool IsAttacking, IsWalking;
 	int ani = 0;
 	int atk;
+	DWORD totaltime;
+	DWORD startATK;
+	DWORD ATKTime = 350 ;
 	//map<int, vector<int>>animation;
 	Simon() 
 	{

@@ -30,7 +30,7 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			ani = 3;
 	}
 	 if(IsAttacking==true)
-	{
+	{	 
 		 weapon->Update(dt, coObjects);
 		
 		if (nx == Simon_Turn_Left)
@@ -42,8 +42,8 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				animations[ani]->SetState(1);
 			}
 			this->SimonAttack();
+			weapon->animations[1]->SetCurrentFrame(animations[ani]->currentFrame);
 			
-			weapon->animations[1]->SetCurrentFrame(animations[ani]->GetCurentFrame());
 			
 		}
 		else if(nx==Simon_Turn_right)
@@ -55,15 +55,14 @@ void Simon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				animations[ani]->SetState(1);
 			}
 			this->SimonAttack();
-			
-			weapon->animations[0]->SetCurrentFrame(animations[ani]->GetCurentFrame());
+			weapon->animations[0]->SetCurrentFrame(animations[ani]->currentFrame);
 			
 		}
-		if (animations[ani]->EndAni == true)
+		if (GetTickCount64()-startATK>=ATKTime)
 		{
-			animations[ani]->EndAni = false;
-			IsAttacking = false;
-			animations[ani]->currentFrame = 0;
+			
+			IsAttacking = false;	
+			weapon->EndAni = true;
 			ani = 0;
 			//animations[ani]->currentFrame = 0;
 		}
@@ -92,6 +91,8 @@ void Simon::SetState(int state)
 		    vx = 0;
 			IsWalking = false;
 			IsAttacking = true;
+			startATK = GetTickCount64();
+			weapon->Attack();
 			break;
 	}
 
@@ -113,17 +114,19 @@ void Simon::Render()
 	}
 	if (IsAttacking == true)
 	{
+		
 		if (nx == Simon_Turn_Left)
 		{
-
+			
 			weapon->animations[1]->Render(weapon->x, weapon->y);
 		}
 		else
 		{
+			DebugOut(L"Weapon%d\n",weapon->animations[0]->currentFrame);
 			weapon->animations[0]->Render(weapon->x, weapon->y);
 
 		}
-		animations[ani]->RenderEX(x, y);
+		animations[ani]->Render(x, y);
 	}
 
 	else

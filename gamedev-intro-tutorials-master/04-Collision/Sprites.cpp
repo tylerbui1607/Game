@@ -142,3 +142,10 @@ LPANIMATION CAnimations::Get(int id)
 {
 	return animations[id];
 }
+
+void CAnimations::LoadResource()
+{
+	
+}
+
+

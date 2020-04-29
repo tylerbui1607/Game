@@ -7,16 +7,19 @@
 class Weapon :
 	public CGameObject
 {
+public:
 	bool EndAni;
 	int level;
 	int ani;
 	CTextures* textures = CTextures::GetInstance();
 	CSprites* sprites = CSprites::GetInstance();
 	CAnimations* animation = CAnimations::GetInstance();
-public:
+	DWORD startATK;
+	DWORD ATKTime = 300;
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	{
-		DebugOut(L"Get BBox weapon\n");
+		//DebugOut(L"Get BBox weapon\n");
 		if (nx == -1)
 		{
 			left = x+50;
@@ -35,7 +38,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void UpdateAnimation();
-
+	void Attack();
 public:
 	Weapon();
 	void SetPosition(int a, int b, int c);

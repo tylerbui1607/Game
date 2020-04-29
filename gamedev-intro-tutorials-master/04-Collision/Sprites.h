@@ -2,7 +2,9 @@
 #include <Windows.h>
 #include <d3dx9.h>
 #include <unordered_map>
-
+#include"Textures.h"
+#define ID_TEX_SIMON 30
+#define ID_TEX_SIMONii 40
 using namespace std;
 
 class CSprite
@@ -85,11 +87,14 @@ class CAnimations
 	static CAnimations * __instance;
 
 	unordered_map<int, LPANIMATION> animations;
+	
 
 public:
 	void Add(int id, LPANIMATION ani);
 	LPANIMATION Get(int id);
-	
+	void LoadResource();
 	static CAnimations * GetInstance();
 };
+
+
 
