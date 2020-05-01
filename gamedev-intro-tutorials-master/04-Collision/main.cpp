@@ -27,6 +27,7 @@
 #include "GameObject.h"
 #include "Textures.h"
 
+#include"Ground.h"
 #include "Mario.h"
 #include "Brick.h"
 #include "Goomba.h"
@@ -38,7 +39,7 @@
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
 #define SCREEN_WIDTH 450
-#define SCREEN_HEIGHT 384
+#define SCREEN_HEIGHT 380
 
 #define MAX_FRAME_RATE 120
 
@@ -74,9 +75,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		return;*/
 	switch (KeyCode)
 	{
-	/*case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
-		break;*/
+	case DIK_SPACE:
+		simon->SetState(Simon_Jump);
+		break;
 	case DIK_A: // reset
 		simon->SetState( Simon_ATK);
 		//simon->SetPosition(50.0f,0.0f);
@@ -150,7 +151,8 @@ void LoadResources()
 	//animations->Add(503, ani);
 	sprites->Add(101, 0, 0, 32, 64, texttorch);
 	sprites->Add(102, 32, 0, 64, 64, texttorch);
-
+	Ground* ground = new Ground(1556, 64);
+	ground->SetPosition(0, 320);
 	ani = new CAnimation(100);		// torch animation
 	ani->Add(101);
 	ani->Add(102);
@@ -185,9 +187,10 @@ void LoadResources()
 		torch4->SetPosition(1216, 256);
 		objects.push_back(torch4);
 	
+		objects.push_back(ground);
 	Mapx = new Map();
 	simon = new Simon();
-	
+	simon->SetPosition(0, 200);
 }
 
 /*
@@ -355,7 +358,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	LoadResources();
 
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT*2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	Run();
 

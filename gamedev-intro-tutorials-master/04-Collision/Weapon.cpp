@@ -3,14 +3,8 @@
 void Weapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//DebugOut(L"toa do:%d/n", coObjects->size());
-	if (GetTickCount64() - startATK >= ATKTime)
-		EndAni = true;
-	else
-	{
-		EndAni = false;
-	}
-	if (EndAni)
-		return;
+	DebugOut(L"UpdateWeapon\n");
+	DebugOut(L"Ani Frame %d%d\n", ani, animations[ani]->currentFrame);
 	if (this->animations[ani]->currentFrame == 2)
 	{
 		for (int i = 0; i < coObjects->size(); i++)
@@ -18,6 +12,7 @@ void Weapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (IsCollision(coObjects->at(i)))
 				coObjects->at(i)->SubHealth();
 		}
+		DebugOut(L"UpdateWeapon2\n");
 	}
 }
 
@@ -75,9 +70,14 @@ Weapon::Weapon()
 
 void Weapon::SetPosition(int a, int b, int c)
 {
+	if (c == -1)
+		ani = 1;
+	else
+		ani = 0;
 	x = a;
 	y = b;
 	nx = c;
+
 }
 
 void Weapon::AdaptPosition()

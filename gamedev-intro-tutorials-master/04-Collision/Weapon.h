@@ -19,13 +19,14 @@ public:
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	{
-		//DebugOut(L"Get BBox weapon\n");
+		
 		if (nx == -1)
 		{
 			left = x+50;
 			top = y+15;
 			right = left + 100;
 			bottom = top + 20;
+			DebugOut(L"Get BBox weapon right\n");
 		}
 		else
 		{
@@ -33,6 +34,7 @@ public:
 			top = y + 15;
 			right = left + 50;
 			bottom = top + 20;
+			DebugOut(L"Get BBox weapon left\n");
 		}
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
