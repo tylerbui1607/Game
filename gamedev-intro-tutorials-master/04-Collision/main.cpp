@@ -93,15 +93,15 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 void CSampleKeyHander::KeyState(BYTE *states)
 {
 	// disable control key when Mario die 
-	if (simon->GetState() == Simon_Dead) return;
+	//if (simon->GetState() == Simon_Dead) return;
 	if (simon->IsAttacking)
 		return;
 	if (game->IsKeyDown(DIK_RIGHT))
 		simon->SetState(Simon_Turn_right);
 	else if (game->IsKeyDown(DIK_LEFT))
 		simon->SetState(Simon_Turn_Left);
-	/*else if (game->IsKeyDown(DIK_A))
-		simon->SetState(Simon_ATK);*/
+	else if (game->IsKeyDown(DIK_DOWN))
+		simon->SetState(Simon_Sit);
 	else
 		simon->SetState(Simon_Stand);
 }

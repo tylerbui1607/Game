@@ -2,19 +2,21 @@
 #include"Ground.h"
 void Simon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = left + 60;
-	bottom = top + 65;
+	
+		left = x;
+		top = y;
+		right = left + 60;
+		bottom = top + 65;
+	
 }
 
 void Simon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	
 	CGameObject::Update(dt);
 	weapon->nx = nx;
-	// Simple fall down
+	
 	vy += Simon_Gravity * dt;
-
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	CalcPotentialCollisions(coObjects, coEvents);
@@ -66,26 +68,39 @@ void Simon::SetState(int state)
 	switch (state)
 	{
 	case Simon_Stand:
+		if (IsSitting)
+		{
+			
+			IsSitting = false;
+		}
 			vx = 0;
+			
 			IsWalking = false; 	
 			break;
-	case Simon_Turn_right:
-		    IsWalking = true;
-			vx = Simon_Speed;
-			nx = -1;
-			break;
-	case Simon_Turn_Left:
-		    IsWalking = true;
-			vx = -Simon_Speed;	
-			nx = 1;
-			break;
 	case Simon_ATK:
-		    vx = 0;
+			vx = 0;
 			IsWalking = false;
 			IsAttacking = true;
 			startATK = GetTickCount64();
 			weapon->Attack();
 			break;
+	case Simon_Turn_right:
+		if(!IsAttacking)
+		{
+			IsWalking = true;
+			vx = Simon_Speed;
+			nx = -1;
+		}
+			break;
+	case Simon_Turn_Left:
+		if(!IsAttacking)
+		{
+			IsWalking = true;
+			vx = -Simon_Speed;	
+			nx = 1;
+		}
+			break;
+
 	case Simon_Jump:
 		if(!IsJumping)
 		{
@@ -93,7 +108,13 @@ void Simon::SetState(int state)
 			IsJumping = true;
 		}
 			break;
-
+	case Simon_Sit:
+		if (IsSitting)
+			return;
+		
+		vx = 0;
+		IsSitting = true;					
+		break;
 	}
 
 }
@@ -133,41 +154,82 @@ void Simon::Render()
 	}
 	if (IsJumping == true)
 	{
-		ani = 6;
+		if (nx == -1)
+			ani = 6;
+		else
+		{
+			ani = 7;
+		}
+	}
+	if (IsSitting)
+	{
+		if (nx == -1)
+			ani = 6;
+		else
+		{
+			ani = 7;
+		}
 	}
 	if (IsAttacking == true)
 	{
 		
-		if (nx == Simon_Turn_Left)
-		{
-			if (ani != Simon_Attack_Left)
+			if (nx == Simon_Turn_Left)
 			{
-				ani = Simon_Attack_Left;
-				animations[ani]->currentFrame = 0;
-				animations[ani]->lastFrameTime = GetTickCount64();
+				if (IsSitting)
+				{
+					if (ani != Simon_Sitting_Attack_Left)
+						ani = Simon_Sitting_Attack_Left;
+				}
+				else
+				{
+					if (ani != Simon_Attack_Left)
+					{
+						ani = Simon_Attack_Left;
+						animations[ani]->currentFrame = 0;
+						animations[ani]->lastFrameTime = GetTickCount64();
+						this->SimonAttack();
+						weapon->ani = 1;
+						DebugOut(L"FRAMEWP%d\n", weapon->animations[1]->currentFrame);
+					}
+				}
+				
 
 			}
-			this->SimonAttack();
-			weapon->ani = 1;
-			DebugOut(L"FRAMEWP%d\n", weapon->animations[1]->currentFrame);
-			
-		}
-		else if (nx == Simon_Turn_right)
-		{
-			if (ani != Simon_Attack_Right)
+			else if (nx == Simon_Turn_right)
 			{
-				ani = Simon_Attack_Right;
-				animations[ani]->currentFrame = 0;
-				animations[ani]->lastFrameTime = GetTickCount64();
+				
+				if (IsSitting)
+				{
+					if (ani != Simon_Sitting_Attack_Right)
+					{
+						ani = Simon_Sitting_Attack_Right;
+						animations[ani]->currentFrame = 0;
+						animations[ani]->lastFrameTime = GetTickCount64();
+						this->SimonAttack();
+						weapon->ani = 0;
+					}
+				}
+			
+				else
+				{
+					if (ani != Simon_Attack_Right)
+					{
+						ani = Simon_Attack_Right;
+						animations[ani]->currentFrame = 0;
+						animations[ani]->lastFrameTime = GetTickCount64();
+						this->SimonAttack();
+						weapon->ani = 0;
+						
+					}
+				}
 			}
-			this->SimonAttack();
-			weapon->ani = 0;		
-		}
+			DebugOut(L"FrameATK%d\n", animations[ani]->currentFrame);
 		if (GetTickCount64() - startATK >= ATKTime)
 		{
 
 			IsAttacking = false;
 			weapon->EndAni = true;
+			
 			ani = 0;
 			//animations[ani]->currentFrame = 0;
 		}
@@ -217,11 +279,15 @@ void Simon::UpdateAni()
 	sprites->Add(4009, 0, 0, 61, 65, textsimon2);
 
 	sprites->Add(40012, 418, 0, 480, 65, textsimon);
-	sprites->Add(40011, 363, 0, 417, 65, textsimon);
+	sprites->Add(40011, 363, 0, 417, 65, textsimon);//Simon Atk
 	sprites->Add(40010, 303, 0, 363, 65, textsimon);
 
-	sprites->Add(40013, 190,0,233,65,textsimon2);
+	sprites->Add(40013, 190,0,233,65,textsimon2) ;  //Simon Jump
+	sprites->Add(40014, 250, 0, 288, 65, textsimon);
 
+	sprites->Add(40015, 0, 65, 60, 117, textsimon2);
+	sprites->Add(40016, 360, 134, 420, 179, textsimon2);
+	sprites->Add(40017, 421, 134, 480, 179, textsimon2);
 	LPANIMATION ani;
 	ani = new CAnimation(100);
 	ani->Add(4004);
@@ -259,6 +325,16 @@ void Simon::UpdateAni()
 	ani->Add(40013);
 	animation->Add(106,ani);
 
+	ani = new CAnimation(100);
+	ani->Add(40014);
+	animation->Add(107, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(40015);
+	ani->Add(40016);
+	ani->Add(40017);
+	animation->Add(108, ani);
+
 	AddAnimation(100);
 	AddAnimation(101);
 	AddAnimation(102);
@@ -266,8 +342,10 @@ void Simon::UpdateAni()
 	AddAnimation(104);
 	AddAnimation(105);
 	AddAnimation(106);
+	AddAnimation(107);
+	AddAnimation(108);
 	SetPosition(0, 150);
-
+	IsSitting = false;
 }
 
 Simon::~Simon()
