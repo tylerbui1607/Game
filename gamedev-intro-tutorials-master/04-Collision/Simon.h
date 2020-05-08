@@ -52,6 +52,7 @@ public:
 		IsWalking = false;
 		 y = 255;
 		 x = 0;
+		 Health = 16;
 	}
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

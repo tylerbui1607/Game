@@ -34,12 +34,15 @@
 #include"Simon.h"
 #include"Torch.h"
 #include"Map.h"
+#include"Effect.h"
+#include"Board.h"
+#include"Health.h"
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
-#define SCREEN_WIDTH 450
-#define SCREEN_HEIGHT 380
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
+#define SCREEN_WIDTH 520
+#define SCREEN_HEIGHT 600
 
 #define MAX_FRAME_RATE 120
 
@@ -57,6 +60,8 @@ CGoomba *goomba;
 Torch* torch;
 Weapon* weapon;
 Map* Mapx;
+Board* board;
+Health* health;
 vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander: public CKeyEventHandler
@@ -88,6 +93,14 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	switch (KeyCode)
+	{
+	case DIK_DOWN: // reset
+		simon->SetState(Simon_Stand);
+		//simon->SetPosition(50.0f,0.0f);
+		break;
+
+	}
 }
 
 void CSampleKeyHander::KeyState(BYTE *states)
@@ -130,7 +143,7 @@ void LoadResources()
 	
 	CTextures * textures = CTextures::GetInstance();
 	 Mapx = new Map();
-
+	  board = new Board();
 	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 	
@@ -210,7 +223,13 @@ void Update(DWORD dt)
 	//DebugOut(L"size:%d /n", coObjects.size());
 	for (int i = 0; i < objects.size(); i++)
 	{
+		if (objects[i]->getHealth() == 0&&dynamic_cast<Effect*>(objects[i])==false)
+		{
+			Effect* effect = new Effect(objects[i]->x, objects[i]->y);
+			objects[i] = effect;
+		}
 		objects[i]->Update(dt,&coObjects);
+		
 	}
 	simon->Update(dt,&objects);
 
@@ -245,10 +264,17 @@ void Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 		Mapx->DrawMap();
 		for (int i = 0; i < objects.size(); i++)
-			if(objects[i]->getHealth()>0)
+		{
+			if (objects[i]->getHealth() > 0)
 				objects[i]->Render();
-		
-		simon->Render();
+		}
+		board->DrawBoard();
+		/*for (int i = 0; i < simon->getHealth(); i++)
+		{
+			health->DrawHeart(110 + 11 * i, 32);
+		}*/
+		health->DrawHeart(110, 32, simon->getHealth());
+		simon->Render();	
 		spriteHandler->End();
 		d3ddv->EndScene();
 	}

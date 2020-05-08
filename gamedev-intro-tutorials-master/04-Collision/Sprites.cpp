@@ -88,12 +88,12 @@ void CAnimation::RenderEX(float x, float y, int alpha)
 	{
 		
 		currentFrame = 0; 
-		//EndAni = true;
+		EndAni = true;
 		lastFrameTime = now;
 	}
 	else
 	{
-		//EndAni = false;
+		EndAni = false;
 		DWORD t = frames[currentFrame]->GetTime();
 		if (now - lastFrameTime > t)
 		{

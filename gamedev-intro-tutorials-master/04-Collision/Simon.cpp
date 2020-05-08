@@ -85,7 +85,7 @@ void Simon::SetState(int state)
 			weapon->Attack();
 			break;
 	case Simon_Turn_right:
-		if(!IsAttacking)
+		if(!IsAttacking&&!IsAttacking&&!IsSitting)
 		{
 			IsWalking = true;
 			vx = Simon_Speed;
@@ -93,7 +93,7 @@ void Simon::SetState(int state)
 		}
 			break;
 	case Simon_Turn_Left:
-		if(!IsAttacking)
+		if (!IsAttacking && !IsAttacking && !IsSitting)
 		{
 			IsWalking = true;
 			vx = -Simon_Speed;	
@@ -113,6 +113,7 @@ void Simon::SetState(int state)
 			return;
 		
 		vx = 0;
+		IsWalking = false;
 		IsSitting = true;					
 		break;
 	}
@@ -285,7 +286,7 @@ void Simon::UpdateAni()
 	sprites->Add(40013, 190,0,233,65,textsimon2) ;  //Simon Jump
 	sprites->Add(40014, 250, 0, 288, 65, textsimon);
 
-	sprites->Add(40015, 0, 65, 60, 117, textsimon2);
+	sprites->Add(40015, 0, 80, 60, 130, textsimon2);
 	sprites->Add(40016, 360, 134, 420, 179, textsimon2);
 	sprites->Add(40017, 421, 134, 480, 179, textsimon2);
 	LPANIMATION ani;

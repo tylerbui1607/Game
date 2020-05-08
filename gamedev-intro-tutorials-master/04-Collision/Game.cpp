@@ -57,7 +57,7 @@ void CGame::Init(HWND hWnd)
 */
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {	
-	D3DXVECTOR3 p(floor(x - cam_x), floor(y - cam_y), 0);		
+	D3DXVECTOR3 p(floor(x - cam_x), floor(y - cam_y + 80), 0);		
 	r.left = left;
 	r.top = top;
 	r.right = right;
@@ -65,7 +65,16 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 
 }
+void CGame::DrawBoard(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
+{
+	D3DXVECTOR3 p(floor(x ), floor(y + 80), 0);
+	r.left = left;
+	r.top = top;
+	r.right = right;
+	r.bottom = bottom;
+	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 
+}
 void CGame::DrawFlip(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
 	D3DXMATRIX AA, BB;
