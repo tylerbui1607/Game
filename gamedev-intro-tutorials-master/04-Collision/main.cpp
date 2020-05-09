@@ -37,6 +37,7 @@
 #include"Effect.h"
 #include"Board.h"
 #include"Health.h"
+#include"Timer.h"
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 
@@ -62,6 +63,7 @@ Weapon* weapon;
 Map* Mapx;
 Board* board;
 Health* health;
+Timer* timer;
 vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander: public CKeyEventHandler
@@ -204,6 +206,7 @@ void LoadResources()
 	Mapx = new Map();
 	simon = new Simon();
 	simon->SetPosition(0, 200);
+	timer = new Timer();
 }
 
 /*
@@ -232,7 +235,7 @@ void Update(DWORD dt)
 		
 	}
 	simon->Update(dt,&objects);
-
+	timer->Update(dt, &coObjects);
 	// Update camera to follow mario
 	float cx, cy;
 	//mario->GetPosition(cx, cy);
@@ -274,6 +277,7 @@ void Render()
 			health->DrawHeart(110 + 11 * i, 32);
 		}*/
 		health->DrawHeart(110, 32, simon->getHealth());
+		timer->Render();
 		simon->Render();	
 		spriteHandler->End();
 		d3ddv->EndScene();

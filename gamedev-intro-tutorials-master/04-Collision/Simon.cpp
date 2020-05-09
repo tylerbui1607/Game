@@ -2,12 +2,20 @@
 #include"Ground.h"
 void Simon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	
+	if (!IsSitting)
+	{
 		left = x;
 		top = y;
 		right = left + 60;
 		bottom = top + 65;
-	
+	}
+	else
+	{
+		left = x;
+		top = y+20;
+		right = left + 60;
+		bottom = y+65;
+	}
 }
 
 void Simon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -122,9 +130,15 @@ void Simon::SetState(int state)
 
 void Simon::SimonAttack()
 {
-	weapon->SetPosition(this->x, this->y,this->nx);
-	weapon->AdaptPosition();
-	
+	if (IsSitting)
+	{
+		weapon->SetPosition(this->x, this->y+20, this->nx);
+	}
+	else
+	{
+		weapon->SetPosition(this->x, this->y, this->nx);
+	}
+	weapon->AdaptPosition();	
 }
 
 void Simon::Render()
@@ -162,7 +176,7 @@ void Simon::Render()
 			ani = 7;
 		}
 	}
-	if (IsSitting)
+	if (IsSitting&&!IsAttacking)
 	{
 		if (nx == -1)
 			ani = 6;
@@ -268,27 +282,27 @@ void Simon::UpdateAni()
 	LPDIRECT3DTEXTURE9 textsimon = textures->Get(ID_TEX_SIMON);
 	LPDIRECT3DTEXTURE9 textsimon2 = textures->Get(ID_TEX_SIMONii);
 	sprites->Add(4001, 0, 0, 60, 65, textsimon);
-	sprites->Add(4002, 61, 0, 121, 65, textsimon);
+	sprites->Add(4002, 61, 0, 121, 65, textsimon);//Simon WalkLeft
 	sprites->Add(4003, 182, 0, 242, 65, textsimon);
 
 	sprites->Add(4004, 420, 0, 480, 65, textsimon2);
-	sprites->Add(4005, 359, 0, 419, 65, textsimon2);
+	sprites->Add(4005, 359, 0, 419, 65, textsimon2);//Simon WalkRight
 	sprites->Add(4006, 298, 0, 359, 65, textsimon2);
 
 	sprites->Add(4007, 108, 0, 162, 65, textsimon2);
-	sprites->Add(4008, 62, 0, 106, 65, textsimon2);
+	sprites->Add(4008, 62, 0, 106, 65, textsimon2); //Simon ATK Right
 	sprites->Add(4009, 0, 0, 61, 65, textsimon2);
 
 	sprites->Add(40012, 418, 0, 480, 65, textsimon);
-	sprites->Add(40011, 363, 0, 417, 65, textsimon);//Simon Atk
+	sprites->Add(40011, 363, 0, 417, 65, textsimon);//Simon Atk Left
 	sprites->Add(40010, 303, 0, 363, 65, textsimon);
 
-	sprites->Add(40013, 190,0,233,65,textsimon2) ;  //Simon Jump
+	sprites->Add(40013, 190, 0, 233, 65, textsimon2);  //Simon Jump
 	sprites->Add(40014, 250, 0, 288, 65, textsimon);
 
-	sprites->Add(40015, 0, 80, 60, 130, textsimon2);
-	sprites->Add(40016, 360, 134, 420, 179, textsimon2);
-	sprites->Add(40017, 421, 134, 480, 179, textsimon2);
+	sprites->Add(40015, 0, 65, 60, 130, textsimon2);
+	sprites->Add(40017, 374, 130, 426, 195, textsimon2);
+	sprites->Add(40016, 426, 130, 480, 195, textsimon2);
 	LPANIMATION ani;
 	ani = new CAnimation(100);
 	ani->Add(4004);

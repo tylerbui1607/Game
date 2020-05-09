@@ -82,16 +82,19 @@ void Weapon::SetPosition(int a, int b, int c)
 
 void Weapon::AdaptPosition()
 {
-	if (nx == 1)
-	{
-		this->x = x - 78;
-		this->y -= 1;
-	}
-	else
-	{
-		this->x = x - 25;
-		this->y -= 2;
-	}
+	
+		if (nx == 1)
+		{
+			this->x = x - 78;
+			this->y -= 1;
+		}
+		else
+		{
+			this->x = x - 25;
+			this->y -= 2;
+		}
+	
+	
 }
 
 void Weapon::SetState(int state)

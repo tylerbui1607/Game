@@ -2,7 +2,8 @@
 #include "GameObject.h"
 #include"Sprites.h"
 #include"Textures.h"
-class Timer 
+class Timer :
+ public	CGameObject
 {
 	CTextures* textures = CTextures::GetInstance();
 	CSprites* sprite = CSprites::GetInstance();
@@ -11,11 +12,15 @@ class Timer
 	int TimeLimit =300;
 	DWORD Count = 0;
 	//map<int, vector<int>>animation;tual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+public:
+	Timer();
 	void LoadSprites();
 	void SetState(int state);
-	void SimonAttack();
-	void Render();
-	void UpdateAni();
 	
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void Render();
+	void UpdateAni(); 
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	~Timer();
 };
 
