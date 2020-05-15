@@ -11,7 +11,7 @@ class Torch :
 
 
 public:
-	Torch();
+	Torch(int type);
 	~Torch() {};
 	
 	virtual void SetState(int state);

@@ -12,8 +12,9 @@ void Torch::Render()
 	animations[ani]->Render(x, y, 255);
 }
 
-Torch::Torch()
+Torch::Torch(int type)
 {
+	ItemType = type;
 	Health = 1;
 }
 

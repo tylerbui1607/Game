@@ -4,6 +4,7 @@
 #include"Weapon.h"
 #include<unordered_map>
 #include<map>
+#include"Knife.h"
 #define Simon_Speed  0.2f
 #define Simon_Gravity  0.001f
 #define Simon_Jump_Speed  0.32f
@@ -14,6 +15,8 @@
 #define Simon_Sit 4
 #define Simon_ATK 2
 #define Simon_Jump 3
+
+
 //Animation
 #define Simon_Stand_Right 0
 #define Simon_Stand_Left 2
@@ -33,26 +36,33 @@ class Simon :
 	public CGameObject
 {
 public:
+	Knife* knife = new Knife(x,y);
 	Weapon *weapon = new Weapon() ;
+	vector<LPWEAPON>weapons;
+	int WeaponType;
 	CTextures* textures = CTextures::GetInstance();
 	CSprites* sprites = CSprites::GetInstance();
 	CAnimations* animation = CAnimations::GetInstance();
-	bool IsAttacking, IsWalking,IsJumping,IsSitting;
+	bool IsAttacking, IsWalking,IsJumping,IsSitting,IsWaiting;
 	int ani = 0;
 	int atk;
 	DWORD totaltime;
 	DWORD startATK;
 	DWORD ATKTime = 330 ;
 	//map<int, vector<int>>animation;
-	Simon() 
+	Simon()
 	{
 		nx = -1;
 		UpdateAni();
 		IsAttacking = false;
 		IsWalking = false;
-		 y = 255;
-		 x = 0;
-		 Health = 16;
+		IsWaiting = false;
+		y = 255;
+		x = 0;
+		Health = 16;
+		weapons.push_back(weapon);
+		//weapons.push_back(knife);
+		WeaponType = 0;
 	}
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

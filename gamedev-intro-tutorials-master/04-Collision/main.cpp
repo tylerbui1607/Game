@@ -38,6 +38,8 @@
 #include"Board.h"
 #include"Health.h"
 #include"Timer.h"
+#include"Score.h"
+#include"Item.h"
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 
@@ -63,7 +65,7 @@ Weapon* weapon;
 Map* Mapx;
 Board* board;
 Health* health;
-Timer* timer;
+Score* score;
 vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander: public CKeyEventHandler
@@ -89,6 +91,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		simon->SetState( Simon_ATK);
 		//simon->SetPosition(50.0f,0.0f);
 		break;
+	case DIK_UP:
+		simon->IsWaiting = true;
+		break;
 	
 	}
 }
@@ -99,6 +104,10 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 	{
 	case DIK_DOWN: // reset
 		simon->SetState(Simon_Stand);
+		//simon->SetPosition(50.0f,0.0f);
+		break;
+	case DIK_UP: // reset
+		simon->IsWaiting = false;
 		//simon->SetPosition(50.0f,0.0f);
 		break;
 
@@ -145,7 +154,7 @@ void LoadResources()
 	
 	CTextures * textures = CTextures::GetInstance();
 	 Mapx = new Map();
-	  board = new Board();
+	 board = new Board();
 	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 	
@@ -177,27 +186,30 @@ void LoadResources()
 	
 
 	
-		Torch* torch = new Torch();
+		Torch* torch = new Torch(0);
 		torch->AddAnimation(599);
 		torch->SetPosition(192  , 256);
 		objects.push_back(torch);
 		
-		Torch* torch1 = new Torch();
+		Torch* torch1 = new Torch(0);
 		torch1->AddAnimation(599);
 		torch1->SetPosition(448, 256);
+		
 		objects.push_back(torch1);
 		
-		Torch* torch2 = new Torch();
+		Torch* torch2 = new Torch(1);
 		torch2->AddAnimation(599);
 		torch2->SetPosition(704, 256);
+	
 		objects.push_back(torch2);
 		
-		Torch* torch3 = new Torch();
+		Torch* torch3 = new Torch(1);
 		torch3->AddAnimation(599);
 		torch3->SetPosition(960, 256);
+		
 		objects.push_back(torch3);
 		
-		Torch* torch4 = new Torch();
+		Torch* torch4 = new Torch(0);
 		torch4->AddAnimation(599);
 		torch4->SetPosition(1216, 256);
 		objects.push_back(torch4);
@@ -206,7 +218,7 @@ void LoadResources()
 	Mapx = new Map();
 	simon = new Simon();
 	simon->SetPosition(0, 200);
-	timer = new Timer();
+	score = new  Score();
 }
 
 /*
@@ -223,19 +235,27 @@ void Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
+	
 	//DebugOut(L"size:%d /n", coObjects.size());
 	for (int i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->getHealth() == 0&&dynamic_cast<Effect*>(objects[i])==false)
+		if (objects[i]->getHealth() == 0&&dynamic_cast<Torch*>(objects[i]))
 		{
-			Effect* effect = new Effect(objects[i]->x, objects[i]->y);
+			Effect* effect = new Effect(objects[i]->x, objects[i]->y,objects[i]->ItemType);
 			objects[i] = effect;
 		}
+		if (objects[i]->getHealth() == 0 && dynamic_cast<Effect*>(objects[i]))
+		{
+			Item* item = new Item(objects[i]->x, objects[i]->y,objects[i]->ItemType);
+			/*DebugOut(L"ItemType:%d\n", objects[i]->ItemType);*/
+			objects[i] = item;
+		}
+		
 		objects[i]->Update(dt,&coObjects);
 		
 	}
 	simon->Update(dt,&objects);
-	timer->Update(dt, &coObjects);
+	score->Update(dt);
 	// Update camera to follow mario
 	float cx, cy;
 	//mario->GetPosition(cx, cy);
@@ -277,7 +297,7 @@ void Render()
 			health->DrawHeart(110 + 11 * i, 32);
 		}*/
 		health->DrawHeart(110, 32, simon->getHealth());
-		timer->Render();
+		score->GetTime();
 		simon->Render();	
 		spriteHandler->End();
 		d3ddv->EndScene();

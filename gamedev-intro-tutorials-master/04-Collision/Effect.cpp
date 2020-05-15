@@ -55,12 +55,13 @@ void Effect::UpdateAnimation()
 
 }
 
-Effect::Effect(int objx, int objy)
+Effect::Effect(int objx, int objy,int type)
 {
 	UpdateAnimation();
 	animations[0]->EndAni = false;
 	this->x = objx;
 	this->y = objy;
+	ItemType = type;
 }
 
 Effect::~Effect()

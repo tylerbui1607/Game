@@ -31,6 +31,11 @@ void CSprite::Draw(float x, float y, int alpha)
 	CGame * game = CGame::GetInstance();
 	game->Draw(x, y, texture, left, top, right, bottom, alpha);
 }
+void CSprite::DrawBoard(float x, float y, int alpha)
+{
+	CGame* game = CGame::GetInstance();
+	game->DrawBoard(x, y, texture, left, top, right, bottom, alpha);
+}
 
 void CSprites::Add(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex)
 {
@@ -84,31 +89,27 @@ void CAnimation::Render(float x, float y, int alpha)
 void CAnimation::RenderEX(float x, float y, int alpha)
 {
 	DWORD now = GetTickCount();
-	if (currentFrame == -1) 
+	if (currentFrame == -1)
 	{
-		
-		currentFrame = 0; 
-		EndAni = true;
+
+		currentFrame = 0;
+		//EndAni = true;
 		lastFrameTime = now;
 	}
 	else
 	{
-		EndAni = false;
+		//EndAni = false;
 		DWORD t = frames[currentFrame]->GetTime();
 		if (now - lastFrameTime > t)
 		{
 			currentFrame++;
 			lastFrameTime = now;
-			if (currentFrame == frames.size()) EndAni=true;
+			if (currentFrame == frames.size()) currentFrame = 0;
 		}
-		
+
 	}
-	if(currentFrame<frames.size())
-		frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
-	else
-	{
-		frames[currentFrame - 1]->GetSprite()->Draw(x, y, alpha);
-	}
+
+	frames[currentFrame]->GetSprite()->DrawBoard(x, y, alpha);
 }
 
 void CAnimation::SetCurrentFrame(int SimonFrame)

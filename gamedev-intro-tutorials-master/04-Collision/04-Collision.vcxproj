@@ -131,8 +131,11 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Health.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Knife.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
@@ -150,9 +153,12 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Health.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Knife.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />

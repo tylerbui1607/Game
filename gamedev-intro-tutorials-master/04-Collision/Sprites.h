@@ -22,6 +22,7 @@ public:
 
 	void DrawFlip(float x, float y, int alpha = 255);
 	void Draw(float x, float y, int alpha = 255);
+	void DrawBoard(float x, float y, int alpha=255);
 };
 
 typedef CSprite * LPSPRITE;

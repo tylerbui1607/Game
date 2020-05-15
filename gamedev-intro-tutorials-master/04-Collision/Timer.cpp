@@ -2,6 +2,9 @@
 
 Timer::Timer()
 {
+	x = 335;
+	y = 30;
+	UpdateAni();
 }
 
 void Timer::LoadSprites()
@@ -28,32 +31,30 @@ void Timer::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
+void Timer::Render(int ID, float X , float Y)
+{
+	animations[ID]->RenderEX(X, Y);
+	
+}
+
 void Timer::Render()
 {
-	DebugOut(L"x%f,y%f\n", x, y);
-	/*int temp = TimeLimit;
-	for (int i = 0; i < 3; i++)
-	{
-		
-		temp = temp / 10;
-	}*/
-	/*animations[2]->Render(x, y);*/
 }
 
 void Timer::UpdateAni()
 {
 	textures->Add(10, L"textures\\font.png", D3DCOLOR_XRGB(255, 0, 255));
 	LPDIRECT3DTEXTURE9 textfont = textures->Get(10);
-	sprite->Add(0, 0, 28, 42, 15, textfont);
-	sprite->Add(1, 15, 28, 42, 30, textfont);
-	sprite->Add(2, 30, 28, 42, 45, textfont);
-	sprite->Add(3, 45, 28, 42, 60, textfont);
-	sprite->Add(4, 60, 28, 42, 75, textfont);
-	sprite->Add(5, 75, 28, 42, 90, textfont);
-	sprite->Add(6, 90, 28, 42, 105, textfont);
-	sprite->Add(7, 105, 28, 42, 120, textfont);
-	sprite->Add(8, 120, 28, 42, 135, textfont);
-	sprite->Add(9, 135, 28, 42, 150, textfont);
+	sprite->Add(0, 0, 28, 15, 42, textfont);
+	sprite->Add(1, 15, 28, 30, 42, textfont);
+	sprite->Add(2, 30, 28, 45, 42, textfont);
+	sprite->Add(3, 45, 28, 60, 42, textfont);
+	sprite->Add(4, 60, 28, 75, 42, textfont);
+	sprite->Add(5, 75, 28, 90, 42, textfont);
+	sprite->Add(6, 90, 28, 105, 42, textfont);
+	sprite->Add(7, 105, 28, 120, 42, textfont);
+	sprite->Add(8, 120, 28, 135, 42, textfont);
+	sprite->Add(9, 135, 28, 150, 42, textfont);
 	LPANIMATION ani;
 	ani = new CAnimation(100);
 	ani->Add(0);

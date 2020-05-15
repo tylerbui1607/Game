@@ -18,6 +18,6 @@ public:
 	virtual void Render();
 	virtual void SetState(int state);
 	void UpdateAnimation();
-	Effect(int objx, int objy);
+	Effect(int objx, int objy,int type);
 	~Effect();
 };

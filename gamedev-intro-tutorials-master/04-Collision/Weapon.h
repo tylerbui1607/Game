@@ -4,8 +4,11 @@
 #include"Sprites.h"
 #define ID_TEX_WEAPON 50
 #define ID_TEX_WEAPONii 60
+class Weapon;
+typedef Weapon* LPWEAPON;
 class Weapon :
 	public CGameObject
+	
 {
 public:
 	bool EndAni;
@@ -39,12 +42,13 @@ public:
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-	void UpdateAnimation();
+	virtual void UpdateAnimation();
 	void Attack();
 public:
 	Weapon();
 	void SetPosition(int a, int b, int c);
 	void AdaptPosition();
+	//virtual bool ACTIVATE(int weapontype, int Atk);
 	virtual void SetState(int state);
 	~Weapon();
 };

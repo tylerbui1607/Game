@@ -37,6 +37,9 @@ public:
 	float x; 
 	float y;
 
+	int ItemType = 0;
+
+
 	float dx;	// dx = vx*dt
 	float dy;	// dy = vy*dt
 
@@ -46,6 +49,7 @@ public:
 	int nx;	 
 	int Health;
 	int state;
+
 
 	DWORD dt; 
 
