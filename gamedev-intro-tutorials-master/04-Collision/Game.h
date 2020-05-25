@@ -50,7 +50,8 @@ public:
 	void DrawFlip(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255);
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
-
+	float GetCamX() { return cam_x; };
+	float GetCamY() { return cam_y; };
 	static void SweptAABB(
 		float ml,			// move left 
 		float mt,			// move top

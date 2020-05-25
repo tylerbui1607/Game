@@ -39,6 +39,25 @@ void Weapon::UpdateAnimation()
 	sprites->Add(206, 322, 0, 482, 68, textweapon2);
 	sprites->Add(207, 483, 0, 640, 68, textweapon2);
 
+	sprites->Add(211, 0, 67, 160, 134, textweapon);
+	sprites->Add(210, 161, 67, 321, 134, textweapon);
+	sprites->Add(209, 322, 67, 482, 134, textweapon);
+	sprites->Add(208, 483, 67, 640, 134, textweapon);
+
+	sprites->Add(212, 0, 67, 160, 134, textweapon2);
+	sprites->Add(213, 161, 67, 321, 134, textweapon2);
+	sprites->Add(214, 322, 67, 482, 134, textweapon2);
+	sprites->Add(215, 483, 67, 640, 134, textweapon2);
+
+	sprites->Add(219, 0, 134, 160, 203, textweapon);
+	sprites->Add(218, 161, 134, 321, 203, textweapon);
+	sprites->Add(217, 322, 134, 482, 203, textweapon);
+	sprites->Add(216, 483, 134, 640, 203, textweapon);
+
+	sprites->Add(220, 0, 134, 160, 203, textweapon2);
+	sprites->Add(221, 161, 134, 321, 203, textweapon2);
+	sprites->Add(222, 322, 134, 482, 203, textweapon2);
+	sprites->Add(223, 483, 134, 640, 203, textweapon2);
 	LPANIMATION ani;
 	ani = new CAnimation(100);
 	ani->Add(200);
@@ -55,6 +74,38 @@ void Weapon::UpdateAnimation()
 	ani->Add(207);
 	animation->Add(700, ani);
 	AddAnimation(700);
+
+	ani = new CAnimation(100);
+	ani->Add(208);
+	ani->Add(209);
+	ani->Add(210);
+	ani->Add(211);
+	animation->Add(701, ani);
+	AddAnimation(701);
+
+	ani = new CAnimation(100);
+	ani->Add(212);
+	ani->Add(213);
+	ani->Add(214);
+	ani->Add(215);
+	animation->Add(702, ani);
+	AddAnimation(702);
+
+	ani = new CAnimation(100);
+	ani->Add(216);
+	ani->Add(217);
+	ani->Add(218);
+	ani->Add(219);
+	animation->Add(703, ani);
+	AddAnimation(703);
+
+	ani = new CAnimation(100);
+	ani->Add(220);
+	ani->Add(221);
+	ani->Add(222);
+	ani->Add(223);
+	animation->Add(704, ani);
+	AddAnimation(704);
 }
 
 void Weapon::Attack()

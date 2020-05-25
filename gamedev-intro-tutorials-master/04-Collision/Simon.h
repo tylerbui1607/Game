@@ -40,13 +40,14 @@ public:
 	Weapon *weapon = new Weapon() ;
 	vector<LPWEAPON>weapons;
 	int WeaponType;
+	int WPT;
 	CTextures* textures = CTextures::GetInstance();
 	CSprites* sprites = CSprites::GetInstance();
 	CAnimations* animation = CAnimations::GetInstance();
-	bool IsAttacking, IsWalking,IsJumping,IsSitting,IsWaiting;
+	bool IsAttacking, IsWalking,IsJumping,IsSitting,IsWaiting,IsLevelUp;
 	int ani = 0;
 	int atk;
-	DWORD totaltime;
+	DWORD LevelUptime;
 	DWORD startATK;
 	DWORD ATKTime = 330 ;
 	//map<int, vector<int>>animation;
@@ -57,12 +58,14 @@ public:
 		IsAttacking = false;
 		IsWalking = false;
 		IsWaiting = false;
+		IsLevelUp = false;
 		y = 255;
 		x = 0;
 		Health = 16;
 		weapons.push_back(weapon);
 		//weapons.push_back(knife);
 		WeaponType = 0;
+		WPT = 0;
 	}
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

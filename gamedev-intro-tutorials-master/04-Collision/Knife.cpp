@@ -1,5 +1,6 @@
 #include "Knife.h"
 
+
 void Knife::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
@@ -18,9 +19,13 @@ void Knife::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				coObjects->at(i)->SubHealth();
 				this->SubHealth();
 				IsActivated = false;
-				IsAttacking == false;
-			}
-
+				//IsAttacking == false;
+			}			
+		}
+		if (OutOfCamera())
+		{
+			this->SubHealth();
+			IsActivated = false;
 		}
 		/*DebugOut(L"UpdateWeapon2\n");*/
 	}
@@ -93,10 +98,10 @@ void Knife::AdaptPosition()
 
 void Knife::ACTIVATE(int weapontype,bool Atk)
 {
-	if (weapontype == 1 && Atk == true && !IsAttacking)
+	if (weapontype == 1 && Atk == true && !IsActivated)
 	{
 		IsActivated = true;
-		IsAttacking = true;
+		//IsAttacking = true;
 	}
 	
 }
@@ -107,6 +112,11 @@ void Knife::SetState(int state)
 {
 
 
+}
+
+bool Knife::OutOfCamera()
+{
+	return ((x - CGame::GetInstance()->GetCamX()) < 0||(x - CGame::GetInstance()->GetCamX())>=520);
 }
 
 Knife::~Knife()

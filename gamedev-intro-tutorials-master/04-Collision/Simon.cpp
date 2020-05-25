@@ -21,83 +21,90 @@ void Simon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void Simon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
-	CGameObject::Update(dt);
-	weapons[0]->nx = nx;
-	
-	vy += Simon_Gravity * dt;
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-	CalcPotentialCollisions(coObjects, coEvents);
-	if (coEvents.size() == 0)
+	if (!IsLevelUp)
 	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
+		CGameObject::Update(dt);
+		weapons[0]->nx = nx;
 
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-
-		for (UINT i = 0; i < coEventsResult.size(); i++)
+		vy += Simon_Gravity * dt;
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
+		CalcPotentialCollisions(coObjects, coEvents);
+		if (coEvents.size() == 0)
 		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
+			x += dx;
+			y += dy;
+		}
+		else
+		{
+			float min_tx, min_ty, nx = 0, ny;
 
-			if (dynamic_cast<Ground*>(e->obj)) // if e->obj is Ground
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+
+			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
-				IsJumping = false;
-				// block 
-				x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-				y += min_ty * dy + ny * 0.4f;
-				if (nx != 0) vx = 0;
-				if (ny != 0) vy = 0;
-			}
-			else
-			{
-				x += dx;		
-			}
-			if (dynamic_cast<Item*>(e->obj))
-			{
-				
-				if (e->obj->getHealth() != 0)
+				LPCOLLISIONEVENT e = coEventsResult[i];
+
+				if (dynamic_cast<Ground*>(e->obj)) // if e->obj is Ground
 				{
-					switch (e->obj->ItemType)
+					IsJumping = false;
+					// block 
+					x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+					y += min_ty * dy + ny * 0.4f;
+					if (nx != 0) vx = 0;
+					if (ny != 0) vy = 0;
+				}
+				else
+				{
+					x += dx;
+				}
+				if (dynamic_cast<Item*>(e->obj))
+				{
+
+					if (e->obj->getHealth() != 0)
 					{
-					case 0:
-						this->Health++;
-						break;
-					case 1:
-						this->WeaponType = 1;
-						break;
+						switch (e->obj->ItemType)
+						{
+						case 0:
+							this->Health++;
+							break;
+						case 1:
+							this->WeaponType = 1;
+							break;
+						case 2:
+							IsLevelUp = true;
+							LevelUptime = GetTickCount64();
+							WPT++;
+							break;
+						}
+						e->obj->SubHealth();
 					}
-					e->obj->SubHealth();					
-				}								
+				}
 			}
 		}
-	}
-	// Calculate dx, dy 
-	if (vx > 0 && x >1476) x = 1476;
-	if (vx < 0 && x < 0) x = 0;
-	if (IsAttacking == true)
-	{
-		if (IsWaiting)
+		// Calculate dx, dy 
+		if (vx > 0 && x > 1476) x = 1476;
+		if (vx < 0 && x < 0) x = 0;
+		if (IsAttacking == true)
 		{
-			if(!knife->IsAttacking)
+			if (IsWaiting)
 			{
-				knife->SetPosition(x,y,nx);
-				knife->Health++;
+				if (!knife->IsActivated)
+				{
+					knife->SetPosition(x, y, nx);
+					knife->Health++;
+				}
 			}
+			if (!knife->IsActivated)
+				knife->ACTIVATE(WeaponType, IsWaiting);
+			weapons[0]->animations[weapons[0]->ani]->SetCurrentFrame(animations[ani]->currentFrame);
+			weapons[0]->Update(dt, coObjects);
 		}
-		knife->ACTIVATE(WeaponType, IsWaiting);
-		weapons[0]->animations[weapons[0]->ani]->SetCurrentFrame(animations[ani]->currentFrame);
-		weapons[0]->Update(dt, coObjects);
+		knife->Update(dt, coObjects);
+		// clean up collision events
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
-	knife->Update(dt, coObjects);
-	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	
 }
 
 void Simon::SetState(int state)
@@ -227,7 +234,14 @@ void Simon::Render()
 						animations[ani]->currentFrame = 0;
 						animations[ani]->lastFrameTime = GetTickCount64();
 						this->SimonAttack();
-						weapons[0]->ani = 1;
+						if (WPT == 1)
+							weapons[0]->ani = 3;
+						else if (WPT == 2)
+						{
+							weapons[0]->ani = 5;
+						}
+						else
+							weapons[0]->ani = 1;
 					}
 				}
 				else
@@ -238,8 +252,14 @@ void Simon::Render()
 						animations[ani]->currentFrame = 0;
 						animations[ani]->lastFrameTime = GetTickCount64();
 						this->SimonAttack();
-						weapons[0]->ani = 1;
-						DebugOut(L"FRAMEWP%d\n", weapons[0]->animations[1]->currentFrame);
+						if (WPT == 1)
+							weapons[0]->ani = 3;
+						else if (WPT == 2)
+						{
+							weapons[0]->ani = 5;
+						}
+						else
+							weapons[0]->ani = 1;
 					}
 				}
 				
@@ -256,7 +276,14 @@ void Simon::Render()
 						animations[ani]->currentFrame = 0;
 						animations[ani]->lastFrameTime = GetTickCount64();
 						this->SimonAttack();
-						weapons[0]->ani = 0;
+						if (WPT == 1)
+							weapons[0]->ani = 2;
+						else if (WPT == 2)
+						{
+							weapons[0]->ani = 4;
+						}
+						else
+							weapons[0]->ani = 0;
 					}
 				}
 			
@@ -268,19 +295,28 @@ void Simon::Render()
 						animations[ani]->currentFrame = 0;
 						animations[ani]->lastFrameTime = GetTickCount64();
 						this->SimonAttack();
-						weapons[0]->ani = 0;
+						if (WPT == 1)
+							weapons[0]->ani = 2;
+						else if (WPT == 2)
+						{
+							weapons[0]->ani = 4;
+						}
+						else
+							weapons[0]->ani = 0;
 						
 					}
 				}
 			}
-			DebugOut(L"FrameATK%d\n", animations[ani]->currentFrame);
+			//DebugOut(L"FrameATK%d\n", animations[ani]->currentFrame);
 		if (GetTickCount64() - startATK >= ATKTime)
 		{
 
 			IsAttacking = false;
 			weapons[0]->EndAni = true;
-			
-			ani = 0;
+			if (nx == Simon_Turn_Left)
+				ani = 0;
+			else
+				ani = 1;
 			//animations[ani]->currentFrame = 0;
 		}
 	}
@@ -289,18 +325,34 @@ void Simon::Render()
 	if (IsAttacking == true && IsWaiting == false)
 	{
 		
-		if (nx == Simon_Turn_Left)
+		/*if (nx == Simon_Turn_Left)
 		{
-			
-			weapons[0]->animations[1]->Render(weapons[0]->x, weapons[0]->y);
-		}
-		else
-		{
-			//DebugOut(L"%d %d\n",animations[ani]->currentFrame,weapons[0]->animations[0]->currentFrame);
-			weapons[0]->animations[0]->Render(weapons[0]->x, weapons[0]->y);
+		*/	
+			weapons[0]->animations[weapons[0]->ani]->Render(weapons[0]->x, weapons[0]->y);
+		//}
+		//else
+		//{
+		//	//DebugOut(L"%d %d\n",animations[ani]->currentFrame,weapons[0]->animations[0]->currentFrame);
+		//	weapons[0]->animations[0]->Render(weapons[0]->x, weapons[0]->y);
 
-		}
+		//}
 		animations[ani]->Render(x, y);
+	}
+	if (IsLevelUp)
+	{
+		if (nx == Simon_Turn_Left)
+			ani = 11;
+		else
+			ani = 10;
+		animations[ani]->Render(x, y);
+		if (GetTickCount64() - LevelUptime >= 300)
+		{
+			IsLevelUp = false;
+			if (nx == Simon_Turn_Left)
+				ani = 0;
+			else
+				ani = 1;
+		}
 	}
 	if (knife->IsActivated==true)
 	{
@@ -333,20 +385,28 @@ void Simon::UpdateAni()
 	sprites->Add(4008, 62, 0, 106, 65, textsimon2); //Simon ATK Right
 	sprites->Add(4009, 0, 0, 61, 65, textsimon2);
 
-	sprites->Add(40012, 418, 0, 480, 65, textsimon);
-	sprites->Add(40011, 363, 0, 417, 65, textsimon);//Simon Atk Left
-	sprites->Add(40010, 303, 0, 363, 65, textsimon);
+	sprites->Add(4012, 418, 0, 480, 65, textsimon);
+	sprites->Add(4011, 363, 0, 417, 65, textsimon);//Simon Atk Left
+	sprites->Add(4010, 303, 0, 363, 65, textsimon);
 
-	sprites->Add(40013, 190, 0, 233, 65, textsimon2);  //Simon Jump
-	sprites->Add(40014, 250, 0, 288, 65, textsimon);
+	sprites->Add(4013, 190, 0, 233, 65, textsimon2);  //Simon Jump
+	sprites->Add(4014, 250, 0, 288, 65, textsimon);
 
-	sprites->Add(40015, 0, 65, 60, 130, textsimon2);
-	sprites->Add(40017, 374, 130, 426, 195, textsimon2);
-	sprites->Add(40016, 426, 130, 480, 195, textsimon2);
+	sprites->Add(4015, 0, 65, 60, 130, textsimon2);
+	sprites->Add(4017, 374, 130, 426, 195, textsimon2);
+	sprites->Add(4016, 426, 130, 480, 195, textsimon2);
 
-	sprites->Add(40020, 420, 65, 480, 130, textsimon);
-	sprites->Add(40019, 0, 130, 60, 195, textsimon);
-	sprites->Add(40018, 60, 130, 120, 195, textsimon );
+	sprites->Add(4020, 420, 65, 480, 130, textsimon);
+	sprites->Add(4019, 0, 130, 60, 195, textsimon);
+	sprites->Add(4018, 60, 130, 120, 195, textsimon );
+
+	sprites->Add(4021, 300, 196, 360, 260, textsimon2);
+	sprites->Add(4022, 360, 196, 420, 260, textsimon2);
+	sprites->Add(4023, 420, 196, 480, 260, textsimon2);
+
+	sprites->Add(4024, 120, 196, 180, 260, textsimon);
+	sprites->Add(4025, 60, 196, 120, 260, textsimon);
+	sprites->Add(4026, 0, 196, 60, 260, textsimon);
 
 	LPANIMATION ani;
 	ani = new CAnimation(100);
@@ -376,30 +436,43 @@ void Simon::UpdateAni()
 	animation->Add(104, ani);
 
 	ani = new CAnimation(100);
-	ani->Add(40010);
-	ani->Add(40011);
-	ani->Add(40012);
+	ani->Add(4010);
+	ani->Add(4011);
+	ani->Add(4012);
 	animation->Add(105, ani);
 
 	ani = new CAnimation(100);
-	ani->Add(40013);
+	ani->Add(4013);
 	animation->Add(106,ani);
 
 	ani = new CAnimation(100);
-	ani->Add(40014);
+	ani->Add(4014);
 	animation->Add(107, ani);
 
 	ani = new CAnimation(100);
-	ani->Add(40015);
-	ani->Add(40016);
-	ani->Add(40017);
+	ani->Add(4015);
+	ani->Add(4016);
+	ani->Add(4017);
 	animation->Add(108, ani);
 
 	ani = new CAnimation(100);
-	ani->Add(40018);
-	ani->Add(40019);
-	ani->Add(40020);
+	ani->Add(4018);
+	ani->Add(4019);
+	ani->Add(4020);
 	animation->Add(109, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(4021);
+	ani->Add(4022);
+	ani->Add(4023);
+	animation->Add(110, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(4024);
+	ani->Add(4025);
+	ani->Add(4026);
+	animation->Add(111, ani);
+
 	AddAnimation(100);
 	AddAnimation(101);
 	AddAnimation(102);
@@ -410,6 +483,8 @@ void Simon::UpdateAni()
 	AddAnimation(107);
 	AddAnimation(108);
 	AddAnimation(109);
+	AddAnimation(110);
+	AddAnimation(111);
 	SetPosition(0, 150);
 	IsSitting = false;
 }

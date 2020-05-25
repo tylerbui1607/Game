@@ -1,7 +1,8 @@
 #pragma once
 #include "Weapon.h"
 #include"GameObject.h"
-#define Knife_Speed  0.2f
+#include"Game.h"
+#define Knife_Speed  0.5f
 class Knife  :
 	public CGameObject
 {
@@ -21,6 +22,7 @@ public:
 	void AdaptPosition();
 	void ACTIVATE(int weapontype, bool Atk);
 	virtual void SetState(int state);
+	bool OutOfCamera();
 	~Knife();
 };
 

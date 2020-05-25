@@ -11,10 +11,12 @@ Item::Item(int ObjX, int ObjY,int Type)
 
 void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	right = 20 + x;
-	top = y;
-	bottom = y + 17;
+	
+		left = x;
+		right = 20 + x;
+		top = y;
+		bottom = y + 17;
+	
 }
 
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -69,7 +71,8 @@ void Item::UpdateAni()
 	textures->Add(10, L"textures\\Item.png", D3DCOLOR_XRGB(116, 116, 116));
 	LPDIRECT3DTEXTURE9 textitem= textures->Get(10);
 	sprites->Add(0, 56, 9, 80, 28, textitem);
-	sprites->Add(1, 0, 34, 33, 68, textitem);
+	sprites->Add(1, 0, 34, 32, 66, textitem);
+	sprites->Add(2, 0, 0, 32, 32, textitem);
 	LPANIMATION ani;
 	ani = new CAnimation(100);
 	ani->Add(0);
@@ -78,8 +81,14 @@ void Item::UpdateAni()
 	ani = new CAnimation(100);
 	ani->Add(1);
 	animation->Add(1,ani);
+
+	ani = new CAnimation(100);
+	ani->Add(2);
+	animation->Add(2, ani);
+
 	AddAnimation(0);
 	AddAnimation(1);
+	AddAnimation(2);
 }
 
 Item::~Item()

@@ -191,25 +191,25 @@ void LoadResources()
 		torch->SetPosition(192  , 256);
 		objects.push_back(torch);
 		
-		Torch* torch1 = new Torch(0);
+		Torch* torch1 = new Torch(2);
 		torch1->AddAnimation(599);
 		torch1->SetPosition(448, 256);
 		
 		objects.push_back(torch1);
 		
-		Torch* torch2 = new Torch(1);
+		Torch* torch2 = new Torch(2);
 		torch2->AddAnimation(599);
 		torch2->SetPosition(704, 256);
 	
 		objects.push_back(torch2);
 		
-		Torch* torch3 = new Torch(1);
+		Torch* torch3 = new Torch(0);
 		torch3->AddAnimation(599);
 		torch3->SetPosition(960, 256);
 		
 		objects.push_back(torch3);
 		
-		Torch* torch4 = new Torch(0);
+		Torch* torch4 = new Torch(1);
 		torch4->AddAnimation(599);
 		torch4->SetPosition(1216, 256);
 		objects.push_back(torch4);
